@@ -1,3 +1,5 @@
+# LForms
+
 ## What is LForms?
 
 [LForms](http://lhncbc.github.io/lforms/), a.k.a. LHC-Forms, is a feature-rich,
@@ -15,6 +17,86 @@ the [Regenstrief Institute](https://www.regenstrief.org/), Inc. and the
 
 For features and demos, please visit the [project
 page](http://lhncbc.github.io/lforms/).
+
+## Quick Start
+
+The fastest way to get started with LForms:
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://clinicaltables.nlm.nih.gov/lforms-versions/38.3.0/webcomponent/styles.css">
+</head>
+<body>
+  <wc-lhc-form></wc-lhc-form>
+
+  <script src="https://clinicaltables.nlm.nih.gov/lforms-versions/38.3.0/webcomponent/assets/lib/zone.min.js"></script>
+  <script src="https://clinicaltables.nlm.nih.gov/lforms-versions/38.3.0/webcomponent/runtime.js"></script>
+  <script src="https://clinicaltables.nlm.nih.gov/lforms-versions/38.3.0/webcomponent/polyfills.js"></script>
+  <script src="https://clinicaltables.nlm.nih.gov/lforms-versions/38.3.0/webcomponent/main.js"></script>
+  <script src="https://clinicaltables.nlm.nih.gov/lforms-versions/38.3.0/fhir/lformsFHIRAll.min.js"></script>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', function() {
+      var formDef = {
+        "type": "LOINC",
+        "code": "54127-6", 
+        "name": "US Surgeon General - family health portrait",
+        "items": [{"questionCode": "54126-8", "question": "Patient name", "dataType": "ST"}]
+      };
+      LForms.Util.addFormToPage(formDef, document.querySelector('wc-lhc-form'));
+    });
+  </script>
+</body>
+</html>
+```
+
+See the [Installation](#installation) section below for other installation options.
+
+## Installation
+
+There are several ways to install and use LForms in your project:
+
+### Option 1: Using npm (Recommended for Node.js projects)
+
+Install the lforms package from npm:
+
+```bash
+npm install lforms
+```
+
+The package contains pre-built files in the `node_modules/lforms/dist/lforms` directory. You'll need to include these files in your project as described in the [Using the LHC-Forms Web Component](#using) section.
+
+**Note**: The current npm package contains built files only. You cannot use `import` or `require` statements directly. Use the built files as described below.
+
+### Option 2: Using CDN (Recommended for quick setup)
+
+You can use the pre-built versions directly from the NLM CDN. Include these files in your HTML:
+
+```html
+<!-- CSS -->
+<link rel="stylesheet" href="https://clinicaltables.nlm.nih.gov/lforms-versions/[VERSION]/webcomponent/styles.css">
+
+<!-- JavaScript files -->
+<script src="https://clinicaltables.nlm.nih.gov/lforms-versions/[VERSION]/webcomponent/assets/lib/zone.min.js"></script>
+<script src="https://clinicaltables.nlm.nih.gov/lforms-versions/[VERSION]/webcomponent/runtime.js"></script>
+<script src="https://clinicaltables.nlm.nih.gov/lforms-versions/[VERSION]/webcomponent/polyfills.js"></script>
+<script src="https://clinicaltables.nlm.nih.gov/lforms-versions/[VERSION]/webcomponent/main.js"></script>
+
+<!-- FHIR support (choose one) -->
+<script src="https://clinicaltables.nlm.nih.gov/lforms-versions/[VERSION]/fhir/lformsFHIRAll.min.js"></script>
+```
+
+Replace `[VERSION]` with a specific version number (e.g., `38.3.0`). See available versions at https://clinicaltables.nlm.nih.gov/lforms-versions/.
+
+### Option 3: Download and host locally
+
+1. Download a release from https://clinicaltables.nlm.nih.gov/lforms-versions/
+2. Extract the files to your project directory
+3. Include the files as described in the [Using the LHC-Forms Web Component](#using) section
+
+For more details about the files to load and how to work with the library, see the [Using the LHC-Forms Web Component](#using) section below.
 
 ## Licensing and Copyright Notice
 
@@ -52,7 +134,7 @@ you don't accidentally add something that we are also working on.
 - Run `npm run build` to build the project and generate a production version of
   the js files, which are much smaller than the development version. It
   generates an ES2017 version of the js files under dist/lforms. For details on
-  the files to load, see ["Usng the LHC-Forms Web Component"](#using).  
+  the files to load, see ["Using the LHC-Forms Web Component"](#using).  
   The `dist` directory is deleted and recreated during the process.
 
   The build also concatenates all the js files (except for zone.min.js and the
@@ -90,40 +172,95 @@ you don't accidentally add something that we are also working on.
 
 ## <a id="using">Using the LHC-Forms Web Component</a>
 
-There are several script files to load. If you are building this, these files 
-will be under `dist/lforms`. If you are using the pre-built versions from
-https://clinicaltables.nlm.nih.gov/lforms-versions, then the file paths below
-are relative to those versioned directories.
+### Required Files
 
-1. `webcomponent/styles.css`
+You need to include the following files in your project (file paths are relative to the base directory, which is either `dist/lforms` if you're building from source, `node_modules/lforms/dist/lforms` if using npm, or the root of the versioned directory from https://clinicaltables.nlm.nih.gov/lforms-versions/):
 
-You need to include the following files in your project:
+1. **CSS**: `webcomponent/styles.css`
+2. **JavaScript files** (in order):
+   - `webcomponent/assets/lib/zone.min.js` (skip if you already have zone.js on the page)
+   - `webcomponent/runtime.js`
+   - `webcomponent/polyfills.js`
+   - `webcomponent/main.js`
+3. **FHIR support** (choose _one_ if you plan to use FHIR Questionnaires):
+   - `fhir/lformsFHIRAll.min.js` (supports all FHIR versions)
+   - `fhir/R5/lformsFHIR.min.js` (R5 only)
+   - `fhir/R4B/lformsFHIR.min.js` (R4B only)
+   - `fhir/R4/lformsFHIR.min.js` (R4 only)
+   - `fhir/STU3/lformsFHIR.min.js` (STU3 only)
 
-1. `webcomponent/styles.css`
-2. `webcomponent/assets/lib/zone.min.js` (unless you already have zone.min.js 
-   on the page)
-3. `webcomponent/runtime.js`
-4. `webcomponent/polyfills.js`
-5. `webcomponent/main.js`
-6. _One_ of the FHIR support library files, assuming you are planning to use
-   FHIR Questionnaires:
-   - `fhir/lformsFHIRAll.min.js`
-   - `fhir/R5/lformsFHIR.min.js`
-   - `fhir/R4B/lformsFHIR.min.js`
-   - `fhir/R4/lformsFHIR.min.js`
-   - `fhir/STU3/lformsFHIR.min.js`
+### Basic Usage Example
 
-There is an example of an app using these files at
-https://lhcforms.nlm.nih.gov/lforms-fhir-app/.
-For details about how to work with this library, and for information about an
-announcements list, see the [documentation](https://lhncbc.github.io/lforms/).
+Once the files are loaded, you can use the `<wc-lhc-form>` web component in your HTML:
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="path/to/webcomponent/styles.css">
+</head>
+<body>
+  <!-- The LForms web component -->
+  <wc-lhc-form></wc-lhc-form>
+
+  <!-- Include the JavaScript files -->
+  <script src="path/to/webcomponent/assets/lib/zone.min.js"></script>
+  <script src="path/to/webcomponent/runtime.js"></script>
+  <script src="path/to/webcomponent/polyfills.js"></script>
+  <script src="path/to/webcomponent/main.js"></script>
+  <script src="path/to/fhir/lformsFHIRAll.min.js"></script>
+
+  <script>
+    // Wait for LForms to be available
+    window.addEventListener('DOMContentLoaded', function() {
+      // Get the form element
+      var formElement = document.querySelector('wc-lhc-form');
+      
+      // Load a form definition (example with a simple form)
+      var formDef = {
+        "type": "LOINC",
+        "code": "54127-6",
+        "name": "US Surgeon General - family health portrait",
+        "items": [{
+          "questionCode": "54126-8",
+          "question": "Patient name",
+          "dataType": "ST"
+        }]
+      };
+      
+      // Set the form definition
+      LForms.Util.addFormToPage(formDef, formElement);
+    });
+  </script>
+</body>
+</html>
+```
+
+### Additional Resources
+
+- **Live example app**: https://lhcforms.nlm.nih.gov/lforms-fhir-app/
+- **Full documentation**: https://lhncbc.github.io/lforms/
+- **Announcements list**: See the documentation for subscription information
 
 ## <a id="npm-package">lforms npm package</a>
 
-A complete npm package that you can use with import/require statements in your
-code is not ready yet. The current lforms npm package only contains built files
-in `/dist/lforms` directory. You can use those files as described in above
-section [Using the LHC-Forms Web Component](#using).
+The lforms npm package contains pre-built files in the `node_modules/lforms/dist/lforms` directory after installation. 
+
+**Important**: You cannot use `import` or `require` statements directly with this package. Instead, you need to include the built files from the `dist/lforms` directory in your HTML, as described in the [Installation](#installation) and [Using the LHC-Forms Web Component](#using) sections above.
+
+For example, if you've installed lforms via npm:
+```bash
+npm install lforms
+```
+
+You can reference the files from `node_modules`:
+```html
+<link rel="stylesheet" href="node_modules/lforms/dist/lforms/webcomponent/styles.css">
+<script src="node_modules/lforms/dist/lforms/webcomponent/assets/lib/zone.min.js"></script>
+<!-- ... other files ... -->
+```
+
+Or you can copy the files to your public/static directory as part of your build process.
 
 ## <a id="docs">Related Documents</a>
 - `form_definition.md` The internal data format of the LHC-Forms widget.
